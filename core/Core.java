@@ -1,6 +1,6 @@
 package core;
 
-public class Workers {
+public class Core {
 
     public static void main(String[] args){
 
