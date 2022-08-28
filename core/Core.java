@@ -57,8 +57,8 @@ public class Core {
 
     }
 
-    private static void remove() {
-
+    private static void remove(LinkedList<String>WorkerList) {
+        WorkerList.remove();
     }
 
     private static void add() {
