@@ -39,7 +39,7 @@ public class Core {
             switch (enumByUser) {
                 case ShowWorker -> show();
                 case AddWorker -> add();
-                case RemoveWorker -> remove();
+                case RemoveWorker -> remove(WorkerList);
                 case ChangeWorker -> change();
                 case exit -> {
                     System.out.println("Good Bye!");
