@@ -37,10 +37,10 @@ public class Core {
                 continue;
             }
             switch (enumByUser) {
-                case ShowWorker -> show();
-                case AddWorker -> add();
+                case ShowWorker -> show(WorkerList);
+                case AddWorker -> add(WorkerList);
                 case RemoveWorker -> remove(WorkerList);
-                case ChangeWorker -> change();
+                case ChangeWorker -> change(WorkerList);
                 case exit -> {
                     System.out.println("Good Bye!");
                     break outer;
@@ -53,7 +53,7 @@ public class Core {
         scanner.close();
     }
 
-    private static void change() {
+    private static void change(LinkedList<String>WorkerList) {
 
     }
 
@@ -61,11 +61,11 @@ public class Core {
         WorkerList.remove();
     }
 
-    private static void add() {
+    private static void add(LinkedList<String>WorkerList) {
 
     }
 
-    private static void show() {
+    private static void show(LinkedList<String>WorkerList) {
 
     }
 
