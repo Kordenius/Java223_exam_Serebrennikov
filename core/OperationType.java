@@ -6,7 +6,8 @@ public enum OperationType {
     AddWorker("2","Добавить Работника"),
     RemoveWorker("3", "Удалить Работника"),
     ChangeWorker("4", "Изменить данные о работнике"),
-    exit("5", "Выйти");
+    CHECK("5","Проверка на состояния файла"),
+    exit("6", "Выйти");
 
     private final String desc;
     private final String number;
@@ -36,7 +37,7 @@ public enum OperationType {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append(number);
+        sb.append(number).append(". ");
         sb.append(desc);
         sb.append("\n");
         return sb.toString();

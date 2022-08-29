@@ -2,24 +2,24 @@ package core;
 
 public class WorkerList {
 
-    private int index;
+    private String index;
     private String name;
-    private String surname;
+    private String patronymic;
     private String lastname;
     private String birthday;
     private String sex;
-    private int contactNumber;
+    private String contactNumber;
     private String post;
     private String department;
     private String chief;
     private String dayOfAdmission;
-    private int salary;
+    private String salary;
     private String status;
 
-    public WorkerList(int index, String name, String surname, String lastname, String birthday, String sex, int contactNumber, String post, String department, String chief, String dayOfAdmission, int salary, String status) {
+    public WorkerList(String index, String name, String patronymic, String lastname, String birthday, String sex, String contactNumber, String post, String department, String chief, String dayOfAdmission, String salary, String status) {
         this.index = index;
         this.name = name;
-        this.surname = surname;
+        this.patronymic = patronymic;
         this.lastname = lastname;
         this.birthday = birthday;
         this.sex = sex;
@@ -38,14 +38,6 @@ public class WorkerList {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public String getLastname() {
@@ -70,14 +62,6 @@ public class WorkerList {
 
     public void setSex(String sex) {
         this.sex = sex;
-    }
-
-    public int getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(int contactNumber) {
-        this.contactNumber = contactNumber;
     }
 
     public String getPost() {
@@ -112,19 +96,11 @@ public class WorkerList {
         this.dayOfAdmission = dayOfAdmission;
     }
 
-    public int getSalary() {
-        return salary;
-    }
-
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
-
-    public int getIndex() {
+    public String getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
+    public void setIndex(String index) {
         this.index = index;
     }
 
@@ -134,5 +110,29 @@ public class WorkerList {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public String getSalary() {
+        return salary;
+    }
+
+    public void setSalary(String salary) {
+        this.salary = salary;
     }
 }
