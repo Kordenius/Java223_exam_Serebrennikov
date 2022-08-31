@@ -2,12 +2,12 @@ package core;
 
 public enum OperationType {
 
-    ShowWorker("1","Показать Работников"),
-    AddWorker("2","Добавить Работника"),
-    RemoveWorker("3", "Удалить Работника"),
-    ChangeWorker("4", "Изменить данные о работнике"),
+    SHOW_WORKER("1","Показать Работников"),
+    ADD_WORKER("2","Добавить Работника"),
+    REMOVE_WORKER("3", "Удалить Работника"),
+    CHANGE_WORKER("4", "Изменить данные о работнике"),
     CHECK("5","Проверка на состояния файла"),
-    exit("6", "Выйти");
+    EXIT("6", "Выйти");
 
     private final String desc;
     private final String number;

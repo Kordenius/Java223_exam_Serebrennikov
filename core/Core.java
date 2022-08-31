@@ -1,11 +1,8 @@
 package core;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.EmptyStackException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -29,12 +26,12 @@ public class Core {
                 continue;
             }
             switch (enumByUser) {
-                case ShowWorker -> show(WorkerList, scanner);
-                case AddWorker -> add(WorkerList, scanner);
-                case RemoveWorker -> remove(WorkerList, scanner);
-                case ChangeWorker -> change(WorkerList, scanner);
+                case SHOW_WORKER -> show(WorkerList, scanner);
+                case ADD_WORKER -> add(WorkerList, scanner);
+                case REMOVE_WORKER -> remove(WorkerList, scanner);
+                case CHANGE_WORKER -> change(WorkerList, scanner);
                 case CHECK -> check();
-                case exit -> {
+                case EXIT -> {
                     break outer;
                 }
                 default -> System.out.println("Операция не найдена!");
@@ -60,15 +57,49 @@ public class Core {
     }
 
     private static void change(LinkedList<WorkerList> WorkerList, Scanner scanner) {
+        System.out.println("Ведите индекс искомого пользователя: ");
+        String inputIndex = scanner.nextLine();
+        for(WorkerList Workers : WorkerList) {
+            if (Workers.getIndex().equals(inputIndex)) {
 
+            }
+        }
     }
 
     private static void remove(LinkedList<WorkerList> WorkerList, Scanner scanner) {
-
+        System.out.println("Ведите индекс искомого работника: ");
+        String inputIndex = scanner.nextLine();
+        for(WorkerList Workers : WorkerList) {
+            if (Workers.getIndex().equals(inputIndex)) {
+                outer:
+                while (true) {
+                    System.out.println("Ведите нужное число");
+                    String answer = scanner.nextLine();
+                    printCorrectAnswerStatusOperationDialog();
+                    CorrectAnswer getEnumByNumber = CorrectAnswer.getEnumByNumber(answer);
+                    if (getEnumByNumber==null) {
+                        System.out.println("Статус не найден");
+                        continue;
+                    }
+                    switch (getEnumByNumber) {
+                        case YES -> {
+                            WorkerList.removeIf(currentUser -> Workers.getIndex().equals(inputIndex));
+                            System.out.println("работник Удалён.");
+                            break outer;
+                        }
+                        case NO -> {
+                            System.out.println("Операция остановлена");
+                            break outer;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private static void add(LinkedList<WorkerList> WorkerList, Scanner scanner) {
-        String newIndex = "1";
+        //for (WorkerList Worker : WorkerList){
+        //    String newIndex = String.valueOf(WorkerList.get(WorkerList.lastIndexOf(Worker.getIndex())));
         System.out.println("Ведите имя нового работника");
         String nameNewWorker = scanner.nextLine();
         System.out.println("Ведите отчество нового работника");
@@ -91,7 +122,7 @@ public class Core {
         System.out.println("Ведите зарплату нового работника");
         String salaryNewWorker = scanner.nextLine();
         System.out.println("Ведите статус нового работника");
-        String StatusWorker = null;
+        String StatusWorker;
         outer:
         while (true) {
             printWorkerStatusOperationDialog();
@@ -101,75 +132,92 @@ public class Core {
                 System.out.println("Статус не найден");
                 continue;
             }
-            switch (getEnumByNumber) {
-                case ACTIVE -> {
-                    StatusWorker = ("Активен");
-                    break outer;
-                }
-                case HIRED -> {
-                    StatusWorker = ("Нанят");
-                    break outer;
-                }
-                case ON_VACATION -> {
-                    StatusWorker = ("В отпуске");
-                    break outer;
-                }
-                case ON_SICK_LEAVE -> {
-                    StatusWorker = ("На больничном");
-                    break outer;
-                }
-                case FIRED -> {
-                    System.out.println("Данный статус недоступен для нового работника");
-                }
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("Индекс: ").append(1).append('\n');
-        sb.append("Имя: ").append(nameNewWorker).append('\n');
-        sb.append("Отчество: ").append(patronymicNewWorker).append('\n');
-        sb.append("Фамилия: ").append(lastnameNewWorker).append('\n');
-        sb.append("День Рождение: ").append(brithDayNewWorker).append('\n');
-        sb.append("Пол: ").append(sexNewWorker).append('\n');
-        sb.append("контактный телефон: ").append(contactNumberNewWorker).append('\n');
-        sb.append("Занимаемый пост: ").append(postNewWorker).append('\n');
-        sb.append("отдел: ").append(departmentNewWorker).append('\n');
-        sb.append("Начальник: ").append("index").append('\n');
-        sb.append("День принятия на работу: ").append(dayOfAdmissionNewWorker).append('\n');
-        sb.append("Зарплата: ").append(salaryNewWorker).append(".Руб").append('\n');
-        sb.append("Статус: ").append(StatusWorker).append('\n');
-
-        System.out.print(sb);
-        System.out.println("Ведённые данные правильны?");
-        outer:
-        while (true) {
-            printCorrectAnswerStatusOperationDialog();
-            String answer = scanner.nextLine();
-            CorrectAnswer getEnumByNumber = CorrectAnswer.getEnumByNumber(answer);
-            if (getEnumByNumber==null) {
-                System.out.println("Статус не найден");
-                continue;
-            }
-            switch (getEnumByNumber) {
-                case YES -> {
-                    try {
-                        //WorkerList.add(newIndex, nameNewWorker, patronymicNewWorker, lastnameNewWorker, brithDayNewWorker,
-                        //        sexNewWorker, contactNumberNewWorker, postNewWorker, departmentNewWorker, "123",
-                        //        dayOfAdmissionNewWorker, salaryNewWorker, StatusWorker);
+                switch (getEnumByNumber) {
+                    case ACTIVE -> {
+                        StatusWorker = ("Активен");
                         break outer;
                     }
-                    catch (Exception e){
-                        System.out.println();
+                    case HIRED -> {
+                        StatusWorker = ("Нанят");
+                        break outer;
                     }
+                    case ON_VACATION -> {
+                        StatusWorker = ("В отпуске");
+                        break outer;
+                    }
+                    case ON_SICK_LEAVE -> {
+                        StatusWorker = ("На больничном");
+                        break outer;
+                    }
+                    case FIRED -> System.out.println("Данный статус недоступен для нового работника");
                 }
-                case NO -> {
-                    break outer;
+            }
+            String sb = "Индекс: " + 1 + '\n' +
+                "Имя: " + nameNewWorker + '\n' +
+                "Отчество: " + patronymicNewWorker + '\n' +
+                "Фамилия: " + lastnameNewWorker + '\n' +
+                "День Рождение: " + brithDayNewWorker + '\n' +
+                "Пол: " + sexNewWorker + '\n' +
+                "контактный телефон: " + contactNumberNewWorker + '\n' +
+                "Занимаемый пост: " + postNewWorker + '\n' +
+                "отдел: " + departmentNewWorker + '\n' +
+                "Начальник: " + "index" + '\n' +
+                "День принятия на работу: " + dayOfAdmissionNewWorker + '\n' +
+                "Зарплата: " + salaryNewWorker + ".Руб" + '\n' +
+                "Статус: " + StatusWorker + '\n';
+
+            System.out.print(sb);
+            System.out.println("Ведённые данные правильны?");
+            outers:
+            while (true) {
+                printCorrectAnswerStatusOperationDialog();
+                String answer = scanner.nextLine();
+                CorrectAnswer getEnumByNumber = CorrectAnswer.getEnumByNumber(answer);
+                if (getEnumByNumber==null) {
+                    System.out.println("Статус не найден");
+                    continue;
+                }
+                switch (getEnumByNumber) {
+                    case YES -> {
+                            try (InputStream inputStream = new FileInputStream("core/Workers/Workers.txt");
+                                OutputStream outputStream = new FileOutputStream("core/Workers/Workers.txt")){
+                            //Worker.add(1, newIndex, nameNewWorker, patronymicNewWorker, lastnameNewWorker, brithDayNewWorker,
+                            //        sexNewWorker, contactNumberNewWorker, postNewWorker, departmentNewWorker, "123",
+                            //        dayOfAdmissionNewWorker, salaryNewWorker, StatusWorker);
+                            } catch (IOException e){
+                                e.printStackTrace();
+                            }
+                            break outers;
+                    }
+                    case NO -> {
+                        break outers;
+                    }
                 }
             }
         }
-    }
+    //}
 
     private static void show(LinkedList<WorkerList> WorkerList, Scanner scanner) {
-
+        System.out.println("Ведите индекс искомого пользователя: ");
+        String inputIndex = scanner.nextLine();
+        for(WorkerList Workers : WorkerList){
+            if (Workers.getIndex().equals(inputIndex)){
+                String sb = "Индекс: " + inputIndex + '\n' +
+                        "Имя: " + Workers.getName() + '\n' +
+                        "Отчество: " + Workers.getPatronymic() + '\n' +
+                        "Фамилия: " + Workers.getLastname() + '\n' +
+                        "День Рождение: " + Workers.getBirthday() + '\n' +
+                        "Пол: " + Workers.getSex() + '\n' +
+                        "контактный телефон: " + Workers.getContactNumber() + '\n' +
+                        "Занимаемый пост: " + Workers.getPost() + '\n' +
+                        "отдел: " + Workers.getDepartment() + '\n' +
+                        "Начальник: " + Workers.getChief() + '\n' +
+                        "День принятия на работу: " + Workers.getDayOfAdmission() + '\n' +
+                        "Зарплата: " + Workers.getSalary() + ".Руб" + '\n' +
+                        "Статус: " + Workers.getStatus() + '\n';
+                System.out.println(sb);
+            }
+        }
     }
 
     private static void printStartOperationDialog() {
@@ -214,7 +262,7 @@ public class Core {
     }
 
     private static String getOperationsCorrectAnswer() {
-        return (Arrays.toString(WorkerStatus.values()).
+        return (Arrays.toString(CorrectAnswer.values()).
                 replace("[", "")).
                 replace("]", "").
                 replace(", ", "").
