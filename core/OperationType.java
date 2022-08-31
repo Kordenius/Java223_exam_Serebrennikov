@@ -6,7 +6,7 @@ public enum OperationType {
     ADD_WORKER("2","Добавить Работника"),
     REMOVE_WORKER("3", "Удалить Работника"),
     CHANGE_WORKER("4", "Изменить данные о работнике"),
-    CHECK("5","Проверка на состояния файла"),
+    CHECK("5","Проверка состояния файла"),
     EXIT("6", "Выйти");
 
     private final String desc;
