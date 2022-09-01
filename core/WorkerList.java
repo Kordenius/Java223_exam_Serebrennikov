@@ -11,7 +11,7 @@ public class WorkerList implements Serializable {
     @Serial
     private static final long serialVersionUID = 21535436;
 
-    private final int index;
+    private int index;
     private String name;
     private String patronymic;
     private String lastname;

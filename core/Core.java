@@ -192,7 +192,7 @@ public class Core {
                             sexNewWorker, newWorkerContactNumberArray ,postNewWorker,departmentNewWorker,Chief, dayOfAdmissionNewWorker,
                             salaryNewWorker,StatusWorker,1);
                     readFormFileToWorkerListOperation();
-                    WorkerListOperation.putIfAbsent(newWorker.getIndex(), newWorker);
+                    WorkerListOperation.putIfAbsent(newWorker.(), newWorker);
                     break outer;
                 }
                 case NO -> {
