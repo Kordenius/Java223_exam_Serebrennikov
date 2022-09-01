@@ -73,9 +73,6 @@ public class Core {
     }
 
     private static void add(Scanner scanner) {
-        WorkerListOperation.clear();
-        readFormFileToWorkerListOperation();
-
         System.out.println("Ведите имя нового работника");
         String nameNewWorker = scanner.nextLine();
         System.out.println("Ведите отчество нового работника");
@@ -192,7 +189,7 @@ public class Core {
                             sexNewWorker, newWorkerContactNumberArray ,postNewWorker,departmentNewWorker,Chief, dayOfAdmissionNewWorker,
                             salaryNewWorker,StatusWorker,1);
                     readFormFileToWorkerListOperation();
-                    WorkerListOperation.putIfAbsent(newWorker.(), newWorker);
+                    WorkerListOperation.putIfAbsent(newWorker.getIndex(), newWorker);
                     break outer;
                 }
                 case NO -> {
