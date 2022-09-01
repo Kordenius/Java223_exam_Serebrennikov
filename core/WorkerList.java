@@ -1,23 +1,33 @@
 package core;
 
-public class WorkerList {
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Objects;
 
-    private String index;
+public class WorkerList implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 21535436;
+
+    private final int index;
     private String name;
     private String patronymic;
     private String lastname;
-    private String birthday;
+    private Calendar birthday;
     private String sex;
-    private String contactNumber;
+    private ArrayList<String> contactNumber;
     private String post;
     private String department;
     private String chief;
-    private String dayOfAdmission;
-    private String salary;
+    private Calendar dayOfAdmission;
+    private int salary;
     private String status;
 
-    public WorkerList(String index, String name, String patronymic, String lastname, String birthday, String sex, String contactNumber, String post, String department, String chief, String dayOfAdmission, String salary, String status) {
-        this.index = index;
+    public WorkerList(String name, String patronymic, String lastname, Calendar birthday, String sex,
+                      ArrayList<String> contactNumber, String post, String department, String chief,
+                      Calendar dayOfAdmission, int salary, String status,int index) {
         this.name = name;
         this.patronymic = patronymic;
         this.lastname = lastname;
@@ -30,6 +40,7 @@ public class WorkerList {
         this.dayOfAdmission = dayOfAdmission;
         this.salary = salary;
         this.status = status;
+        this.index = index;
     }
 
     public String getName() {
@@ -46,14 +57,6 @@ public class WorkerList {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
     }
 
     public String getSex() {
@@ -88,22 +91,6 @@ public class WorkerList {
         this.chief = chief;
     }
 
-    public String getDayOfAdmission() {
-        return dayOfAdmission;
-    }
-
-    public void setDayOfAdmission(String dayOfAdmission) {
-        this.dayOfAdmission = dayOfAdmission;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
-    public void setIndex(String index) {
-        this.index = index;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -120,19 +107,61 @@ public class WorkerList {
         this.patronymic = patronymic;
     }
 
-    public String getContactNumber() {
+    public ArrayList<String> getContactNumber() {
         return contactNumber;
     }
 
-    public void setContactNumber(String contactNumber) {
+    public void setContactNumber(ArrayList<String> contactNumber) {
         this.contactNumber = contactNumber;
     }
 
-    public String getSalary() {
+    public int getSalary() {
         return salary;
     }
 
-    public void setSalary(String salary) {
+    public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    public Calendar getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Calendar birthday) {
+        this.birthday = birthday;
+    }
+
+    public Calendar getDayOfAdmission() {
+        return dayOfAdmission;
+    }
+
+    public void setDayOfAdmission(Calendar dayOfAdmission) {
+        this.dayOfAdmission = dayOfAdmission;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this==o) return true;
+        if (o==null || getClass()!=o.getClass()) return false;
+        WorkerList that = (WorkerList) o;
+        return Objects.equals(name, that.name) && Objects.equals(patronymic, that.patronymic) &&
+                Objects.equals(lastname, that.lastname) && Objects.equals(birthday, that.birthday) &&
+                Objects.equals(sex, that.sex) && Objects.equals(contactNumber, that.contactNumber) &&
+                Objects.equals(post, that.post) && Objects.equals(department, that.department) &&
+                Objects.equals(chief, that.chief) && Objects.equals(dayOfAdmission, that.dayOfAdmission) &&
+                Objects.equals(salary, that.salary) && Objects.equals(status, that.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, patronymic, lastname, birthday, sex, contactNumber, post, department, chief, dayOfAdmission, salary, status);
     }
 }
