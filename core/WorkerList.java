@@ -3,7 +3,7 @@ package core;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 public class WorkerList implements Serializable {
@@ -11,23 +11,23 @@ public class WorkerList implements Serializable {
     @Serial
     private static final long serialVersionUID = 21535436;
 
-    private int index;
+    private final Integer index;
     private String name;
     private String patronymic;
     private String lastname;
-    private Calendar birthday;
+    private Date birthday;
     private String sex;
     private ArrayList<String> contactNumber;
     private String post;
     private String department;
     private String chief;
-    private Calendar dayOfAdmission;
+    private Date dayOfAdmission;
     private int salary;
     private String status;
 
-    public WorkerList(String name, String patronymic, String lastname, Calendar birthday, String sex,
+    public WorkerList(String name, String patronymic, String lastname, Date birthday, String sex,
                       ArrayList<String> contactNumber, String post, String department, String chief,
-                      Calendar dayOfAdmission, int salary, String status,int index) {
+                      Date dayOfAdmission, int salary, String status,Integer index) {
         this.name = name;
         this.patronymic = patronymic;
         this.lastname = lastname;
@@ -123,28 +123,24 @@ public class WorkerList implements Serializable {
         this.salary = salary;
     }
 
-    public Calendar getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Calendar birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
-    public Calendar getDayOfAdmission() {
+    public Date getDayOfAdmission() {
         return dayOfAdmission;
     }
 
-    public void setDayOfAdmission(Calendar dayOfAdmission) {
+    public void setDayOfAdmission(Date dayOfAdmission) {
         this.dayOfAdmission = dayOfAdmission;
     }
 
-    public int getIndex() {
+    public Integer getIndex() {
         return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
     }
 
     @Override
