@@ -78,40 +78,30 @@ public class Core {
         readFormFileToWorkerListOperation();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Ведите имя нового работника");
-        String nameNewWorker = scanner.nextLine();
+        String nameWorker = scanner.nextLine();
         System.out.println("Ведите фамилию нового работника");
-        String lastnameNewWorker = scanner.nextLine();
+        String lastnameWorker = scanner.nextLine();
         System.out.println("Ведите отчество нового работника");
-        String patronymicNewWorker = scanner.nextLine();
-        Date brithDayNewWorker = brithDayNewWorker();
+        String patronymicWorker = scanner.nextLine();
+        Date brithDayWorker = brithDayNewWorker();
         System.out.println("Ведите пол нового работника");
-        String sexNewWorker = scanner.nextLine();
-        ArrayList<String> newWorkerContactNumberArray = getNewWorkerContactNumber();
+        String sexWorker = scanner.nextLine();
+        ArrayList<String> workerContactNumberArray = getNewWorkerContactNumber();
         System.out.println("Ведите число руководителя нового работника, используя только цифры");
         //printChiefOperationDialog();
         String Chief = scanner.nextLine();
         System.out.println("Ведите занимаемый пост новым работником");
-        String postNewWorker = scanner.nextLine();
+        String postWorker = scanner.nextLine();
         System.out.println("Ведите департамент занимаемый новым работником");
-        String departmentNewWorker = scanner.nextLine();
-        Date dayOfAdmissionNewWorker = dayOfAdmission();
+        String departmentWorker = scanner.nextLine();
+        Date dayOfAdmissionWorker = dayOfAdmission();
         System.out.println("Ведите зарплату нового работника");
-        int salaryNewWorker = scanner.nextInt();
+        int salaryWorker = scanner.nextInt();
         String StatusWorker = newWorkerStatus();
 
-        String sb = "Индекс: " + 1 + '\n' +
-                "Имя: " + nameNewWorker + '\n' +
-                "Фамилия: " + lastnameNewWorker + '\n' +
-                "Отчество: " + patronymicNewWorker + '\n' +
-                "День Рождение: " + brithDayNewWorker + '\n' +
-                "Пол: " + sexNewWorker + '\n' +
-                "контактный телефон: " + newWorkerContactNumberArray + '\n' +
-                "Занимаемый пост: " + postNewWorker + '\n' +
-                "отдел: " + departmentNewWorker + '\n' +
-                "Начальник: " + "index" + '\n' +
-                "День принятия на работу: " + dayOfAdmissionNewWorker + '\n' +
-                "Зарплата: " + salaryNewWorker + ".Руб" + '\n' +
-                "Статус: " + StatusWorker + '\n';
+        String sb = getSb(nameWorker, lastnameWorker, patronymicWorker, brithDayWorker, sexWorker,
+                workerContactNumberArray, postWorker, departmentWorker, dayOfAdmissionWorker,
+                salaryWorker, StatusWorker);
 
         System.out.print(sb);
         System.out.println("Ведённые данные корректны?");
@@ -126,9 +116,9 @@ public class Core {
             }
             switch (enumByUser){
                 case YES -> {
-                    WorkerList newWorker = new WorkerList(nameNewWorker, patronymicNewWorker,lastnameNewWorker,brithDayNewWorker,
-                            sexNewWorker, newWorkerContactNumberArray ,postNewWorker,departmentNewWorker,Chief, dayOfAdmissionNewWorker,
-                            salaryNewWorker,StatusWorker,1);
+                    WorkerList newWorker = new WorkerList(nameWorker, patronymicWorker,lastnameWorker,brithDayWorker,
+                            sexWorker, workerContactNumberArray ,postWorker,departmentWorker,Chief, dayOfAdmissionWorker,
+                            salaryWorker,StatusWorker,1);
                     readFormFileToWorkerListOperation();
                     workerListOperation.putIfAbsent(newWorker.getIndex() + 1, newWorker);
                     writeMapForOperationToFileWorkerList();
@@ -141,6 +131,23 @@ public class Core {
             }
         }
 
+    }
+
+    private static String getSb(String nameNewWorker, String lastnameNewWorker, String patronymicNewWorker, Date brithDayNewWorker, String sexNewWorker, ArrayList<String> newWorkerContactNumberArray, String postNewWorker, String departmentNewWorker, Date dayOfAdmissionNewWorker, int salaryNewWorker, String StatusWorker) {
+        String sb = "Индекс: " + 1 + '\n' +
+                "Имя: " + nameNewWorker + '\n' +
+                "Фамилия: " + lastnameNewWorker + '\n' +
+                "Отчество: " + patronymicNewWorker + '\n' +
+                "День Рождение: " + brithDayNewWorker + '\n' +
+                "Пол: " + sexNewWorker + '\n' +
+                "контактный телефон: " + newWorkerContactNumberArray + '\n' +
+                "Занимаемый пост: " + postNewWorker + '\n' +
+                "отдел: " + departmentNewWorker + '\n' +
+                "Начальник: " + "index" + '\n' +
+                "День принятия на работу: " + dayOfAdmissionNewWorker + '\n' +
+                "Зарплата: " + salaryNewWorker + ".Руб" + '\n' +
+                "Статус: " + StatusWorker + '\n';
+        return sb;
     }
 
     private static Date dayOfAdmission() {
