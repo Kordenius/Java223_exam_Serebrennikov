@@ -11,7 +11,7 @@ public class WorkerList implements Serializable {
     @Serial
     private static final long serialVersionUID = 21535436;
 
-    private final Integer index;
+    private Integer index;
     private String name;
     private String patronymic;
     private String lastname;
@@ -142,6 +142,8 @@ public class WorkerList implements Serializable {
     public Integer getIndex() {
         return index;
     }
+
+    public void setIndex(int index){this.index = index;}
 
     @Override
     public boolean equals(Object o) {

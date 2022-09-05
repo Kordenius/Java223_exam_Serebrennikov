@@ -6,8 +6,10 @@ public enum OperationType {
     ADD_WORKER("2","Добавить Работника"),
     REMOVE_WORKER("3", "Удалить Работника"),
     CHANGE_WORKER("4", "Изменить данные о работнике"),
-    CHECK("5","Проверка состояния файла"),
-    EXIT("6", "Выйти");
+    TOP10_WORKERS_BY_SALARY("5","Топ 10 работников по зарплате"),
+    TOP10_WORKERS_BY_LONGEST_WORK("6","Топ 10 работников по длительности работы"),
+    CHECK("7","Проверка состояния файла"),
+    EXIT("8", "Выйти");
 
     private final String desc;
     private final String number;

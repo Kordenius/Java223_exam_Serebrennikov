@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 
 public class Core {
 
-
     private static final File FileWorkersPath = new File("core/Workers");
     private static final File FileWorkers = new File("core/Workers/Workers.txt");
 
@@ -33,8 +32,10 @@ public class Core {
             switch (enumByUser) {
                 case SHOW_WORKER -> showWorker();
                 case ADD_WORKER -> addNewWorker();
-                case REMOVE_WORKER -> removeWorker(scanner);
-                case CHANGE_WORKER -> changeWorker(scanner);
+                case REMOVE_WORKER -> removeWorker();
+                case CHANGE_WORKER -> System.out.println("Данная функция не работает");
+                case TOP10_WORKERS_BY_SALARY -> topTenWorkersBySalary();
+                case TOP10_WORKERS_BY_LONGEST_WORK -> topTenWorkersByLongestWork();
                 case CHECK -> checkFileIsExist();
                 case EXIT -> {
                     break coreFunction;
@@ -50,33 +51,96 @@ public class Core {
     private static void checkFileIsExist() {
         if (Core.FileWorkers.isFile()) {
             System.out.println("База данных на текущий момент существует");
-        }
+        } else
         try {
             boolean FilePath = Core.FileWorkersPath.mkdirs();
             boolean File = Core.FileWorkers.createNewFile();
+            writeMapForOperationToFileWorkerList();
             if (FilePath & File) {
                 System.out.println("Создана новая база данных");
             }
-            writeMapForOperationToFileWorkerList();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
 
-    private static void changeWorker(Scanner scanner) {
-
-    }
-
-    private static void removeWorker(Scanner scanner) {
-        System.out.println("Ведите индекс искомого работника: ");
-        String inputIndex = scanner.nextLine();
-
-    }
-
-    private static void addNewWorker() {
+    private static void changeWorker() {
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
+        Scanner changeWorkerScan = new Scanner(System.in);
+        System.out.println("Ведите индекс искомого работника: ");
+        String inputIndex = changeWorkerScan.nextLine();
+        if (isExistWorker(inputIndex)){
+            showExistWorker(inputIndex);
+            Integer index = Integer.parseInt(inputIndex);
+            System.out.println("Изменить пользователя?");
+            outer:
+            while (true){
+                Scanner answerScan = new Scanner(System.in);
+                printCorrectAnswerStatusOperationDialog();
+                String answer = answerScan.nextLine();
+                CorrectAnswer enumByUser = CorrectAnswer.getEnumByNumber(answer);
+                if (enumByUser == null) {
+                    System.out.println("Операция не найдена!");
+                    continue;
+                }
+                switch (enumByUser){
+                    case YES -> {
+                        replaceChangeWorker();
+                        break outer;
+                    }
+                    case NO -> {
+                        System.out.println("Операция переврана");
+                        break outer;
+                    }
+                }
+            }
+        }
+        else
+            System.out.println("Пользователь не найден");
+    }
+
+    private static void removeWorker() {
+        workerListOperation.clear();
+        readFormFileToWorkerListOperation();
+        Scanner removeWorkerScan = new Scanner(System.in);
+        System.out.println("Ведите индекс искомого работника: ");
+        String inputIndex = removeWorkerScan.nextLine();
+        if (isExistWorker(inputIndex)){
+            showExistWorker(inputIndex);
+            System.out.println("Удалить пользователя?");
+            outer:
+            while (true){
+                Scanner answerScan = new Scanner(System.in);
+                printCorrectAnswerStatusOperationDialog();
+                String answer = answerScan.nextLine();
+                CorrectAnswer enumByUser = CorrectAnswer.getEnumByNumber(answer);
+                if (enumByUser == null) {
+                    System.out.println("Операция не найдена!");
+                    continue;
+                }
+                switch (enumByUser){
+                    case YES -> {
+                        workerListOperation.remove(inputIndex);
+                        writeMapForOperationToFileWorkerList();
+                        System.out.println("Пользователь был удалён");
+                        break outer;
+                    }
+                    case NO -> {
+                        System.out.println("Операция переврана");
+                        break outer;
+                    }
+                }
+            }
+        }
+        else
+            System.out.println("Пользователь не найден");
+    }
+
+
+    private static void addNewWorker() {
         Scanner scanner = new Scanner(System.in);
+        Integer index = newIndex();
         System.out.println("Ведите имя нового работника");
         String nameWorker = scanner.nextLine();
         System.out.println("Ведите фамилию нового работника");
@@ -87,9 +151,8 @@ public class Core {
         System.out.println("Ведите пол нового работника");
         String sexWorker = scanner.nextLine();
         ArrayList<String> workerContactNumberArray = getNewWorkerContactNumber();
-        System.out.println("Ведите число руководителя нового работника, используя только цифры");
-        //printChiefOperationDialog();
-        String Chief = scanner.nextLine();
+        System.out.println("Ведите ФИО руководителя нового работника");
+        String chief = scanner.nextLine();
         System.out.println("Ведите занимаемый пост новым работником");
         String postWorker = scanner.nextLine();
         System.out.println("Ведите департамент занимаемый новым работником");
@@ -97,30 +160,30 @@ public class Core {
         Date dayOfAdmissionWorker = dayOfAdmission();
         System.out.println("Ведите зарплату нового работника");
         int salaryWorker = scanner.nextInt();
-        String StatusWorker = newWorkerStatus();
+        String statusWorker = WorkerStatus();
 
-        String sb = getSb(nameWorker, lastnameWorker, patronymicWorker, brithDayWorker, sexWorker,
+        String sb = showTab(index,nameWorker, lastnameWorker, patronymicWorker, brithDayWorker, sexWorker,
                 workerContactNumberArray, postWorker, departmentWorker, dayOfAdmissionWorker,
-                salaryWorker, StatusWorker);
+                salaryWorker, statusWorker, chief);
 
         System.out.print(sb);
         System.out.println("Ведённые данные корректны?");
         outer:
         while (true){
+            Scanner answerScan = new Scanner(System.in);
             printCorrectAnswerStatusOperationDialog();
-            String answer = scanner.nextLine();
+            String answer = answerScan.nextLine();
             CorrectAnswer enumByUser = CorrectAnswer.getEnumByNumber(answer);
-            if (enumByUser==null) {
+            if (enumByUser == null) {
                 System.out.println("Операция не найдена!");
                 continue;
             }
             switch (enumByUser){
                 case YES -> {
                     WorkerList newWorker = new WorkerList(nameWorker, patronymicWorker,lastnameWorker,brithDayWorker,
-                            sexWorker, workerContactNumberArray ,postWorker,departmentWorker,Chief, dayOfAdmissionWorker,
-                            salaryWorker,StatusWorker,1);
-                    readFormFileToWorkerListOperation();
-                    workerListOperation.putIfAbsent(newWorker.getIndex() + 1, newWorker);
+                            sexWorker, workerContactNumberArray ,postWorker,departmentWorker,chief, dayOfAdmissionWorker,
+                            salaryWorker,statusWorker,index);
+                    workerListOperation.putIfAbsent(newWorker.getIndex(), newWorker);
                     writeMapForOperationToFileWorkerList();
                     break outer;
                 }
@@ -130,11 +193,14 @@ public class Core {
                 }
             }
         }
-
     }
 
-    private static String getSb(String nameNewWorker, String lastnameNewWorker, String patronymicNewWorker, Date brithDayNewWorker, String sexNewWorker, ArrayList<String> newWorkerContactNumberArray, String postNewWorker, String departmentNewWorker, Date dayOfAdmissionNewWorker, int salaryNewWorker, String StatusWorker) {
-        String sb = "Индекс: " + 1 + '\n' +
+    private static String showTab(Integer index , String nameNewWorker, String lastnameNewWorker,
+                                  String patronymicNewWorker, Date brithDayNewWorker, String sexNewWorker,
+                                  ArrayList<String> newWorkerContactNumberArray, String postNewWorker,
+                                  String departmentNewWorker, Date dayOfAdmissionNewWorker, int salaryNewWorker,
+                                  String StatusWorker, String chief) {
+        String sb = "Индекс: " + index + '\n' +
                 "Имя: " + nameNewWorker + '\n' +
                 "Фамилия: " + lastnameNewWorker + '\n' +
                 "Отчество: " + patronymicNewWorker + '\n' +
@@ -143,7 +209,7 @@ public class Core {
                 "контактный телефон: " + newWorkerContactNumberArray + '\n' +
                 "Занимаемый пост: " + postNewWorker + '\n' +
                 "отдел: " + departmentNewWorker + '\n' +
-                "Начальник: " + "index" + '\n' +
+                "Начальник: " + chief + '\n' +
                 "День принятия на работу: " + dayOfAdmissionNewWorker + '\n' +
                 "Зарплата: " + salaryNewWorker + ".Руб" + '\n' +
                 "Статус: " + StatusWorker + '\n';
@@ -165,7 +231,7 @@ public class Core {
         return dayOfAdmissionNewWorker.getTime();
     }
 
-    private static String newWorkerStatus() {
+    private static String WorkerStatus() {
         Scanner statusScan = new Scanner(System.in);
         System.out.println("Ведите статус нового работника");
         String StatusWorker;
@@ -203,7 +269,7 @@ public class Core {
 
     private static ArrayList<String> getNewWorkerContactNumber() {
         Scanner numScan = new Scanner(System.in);
-        System.out.println("Ведите контактный телефон нового работника, используя только цифры");
+        System.out.println("Ведите контактный телефон нового работника, к примеру: +79999999999");
         String contactNumberNewWorker = numScan.nextLine();
         String[] newWorkerContactNumberArraySplit = contactNumberNewWorker.split(" ");
         ArrayList<String> newWorkerContactNumberArray = new ArrayList<>();
@@ -251,7 +317,7 @@ public class Core {
         System.out.println("Ведите индекс искомого пользователя: ");
         String inputIndex = showScan.nextLine();
         if (isExistWorker(inputIndex)){
-            System.out.println("Пользователь найден");
+            showExistWorker(inputIndex);
         }
         else
             System.out.println("Пользователь не найден");
@@ -264,12 +330,7 @@ public class Core {
 
     private static void printChangeOperationDialog() {
         System.out.println("Ведите число функции: ");
-        System.out.println(getOperations());
-    }
-
-    private static void printChiefOperationDialog() {
-        System.out.println("Ведите число функции: ");
-        System.out.println(getOperations());
+        System.out.println(getOperationsChangeWorker());
     }
 
     private static void printWorkerStatusOperationDialog() {
@@ -306,6 +367,14 @@ public class Core {
                 trim();
     }
 
+    private static String getOperationsChangeWorker() {
+        return (Arrays.toString(ChangeWorker.values()).
+                replace("[", "")).
+                replace("]", "").
+                replace(", ", "").
+                trim();
+    }
+
     private static void writeMapForOperationToFileWorkerList() {
         try (FileOutputStream fileToWrite = new FileOutputStream(FileWorkers);
              ObjectOutputStream objectToWrite = new ObjectOutputStream(fileToWrite)) {
@@ -315,16 +384,14 @@ public class Core {
         }
     }
 
-    private static void readFormFileToWorkerListOperation(){
+    private static void readFormFileToWorkerListOperation() {
         try (FileInputStream fileToRead = new FileInputStream(FileWorkers);
-            ObjectInputStream objectToRead = new ObjectInputStream(fileToRead)){
+             ObjectInputStream objectToRead = new ObjectInputStream(fileToRead)) {
             workerListOperation = (HashMap<Integer, Object>) objectToRead.readObject();
-            objectToRead.close();
-            if (workerListOperation.isEmpty()){
+            if (workerListOperation.isEmpty()) {
                 System.out.println("Список работников пуст");
             }
-        }
-        catch (IOException | ClassNotFoundException exception){
+        } catch (IOException | ClassNotFoundException exception) {
             exception.printStackTrace();
         }
     }
@@ -345,19 +412,14 @@ public class Core {
         return checkValue;
     }
 
-    private static Integer getLastIndexWorker(){
-        Integer getIndexWorker = null;
-
-        return getIndexWorker;
-    }
-
     private static boolean isExistWorker(String inputIndex){
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
+        Integer index = Integer.parseInt(inputIndex);
         boolean checkValue = true;
         for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
             WorkerList workerList = (WorkerList) entry.getValue();
-            if (workerList.getIndex().equals(inputIndex)){
+            if (workerList.getIndex().equals(index)){
                 checkValue = true;
                 break;
             }
@@ -365,5 +427,104 @@ public class Core {
         }
         workerListOperation.clear();
         return checkValue;
+    }
+
+    private static Integer newIndex(){
+        workerListOperation.clear();
+        readFormFileToWorkerListOperation();
+        int index = 1;
+        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+            WorkerList workerList = (WorkerList) entry.getValue();
+            if (workerList.getIndex().equals(index)){
+                index++;
+            }
+            else
+                return index;
+                break;
+        }
+        workerListOperation.clear();
+        return index;
+    }
+
+    private static void showExistWorker(String inputIndex){
+        workerListOperation.clear();
+        readFormFileToWorkerListOperation();
+        String sb = "";
+        Integer findIndex = Integer.parseInt(inputIndex);
+        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+            WorkerList workerList = (WorkerList) entry.getValue();
+            if (workerList.getIndex().equals(findIndex)){
+                Integer index = Integer.parseInt(inputIndex);
+                String name = workerList.getName();
+                String lastName = workerList.getLastname();
+                String patronymic = workerList.getPatronymic();
+                Date brithDay = workerList.getBirthday();
+                String sex = workerList.getSex();
+                ArrayList<String> contactNumber = workerList.getContactNumber();
+                String post = workerList.getPost();
+                String department = workerList.getDepartment();
+                String chief = workerList.getChief();
+                Date dayOfAdmission = workerList.getDayOfAdmission();
+                int salary = workerList.getSalary();
+                String status = workerList.getStatus();
+                sb = showTab(index, name, lastName, patronymic, brithDay, sex, contactNumber, post,
+                        department, dayOfAdmission, salary, status, chief);
+                System.out.print(sb);
+            }
+        }
+        workerListOperation.clear();
+    }
+
+    private static void replaceChangeWorker(){
+        addNewWorker();
+        readFormFileToWorkerListOperation();
+    }
+
+    private static void topTenWorkersBySalary(){
+        workerListOperation.clear();
+        readFormFileToWorkerListOperation();
+        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+            WorkerList workerList = (WorkerList) entry.getValue();
+            int topSalary = workerList.getSalary();
+            int checkerSalary = workerList.getSalary();
+            int stopSalary = 0;
+            for(int numTop = 1; numTop < 11; numTop++){
+                for (int top = 0; top < workerListOperation.size(); top++){
+                    if (topSalary > checkerSalary) {
+                        stopSalary = topSalary;
+                        topSalary = checkerSalary;
+                        checkerSalary = workerList.getSalary();
+                    }
+                }
+                System.out.println(numTop + ", " + "Индекс: " + workerList.getIndex()+ " ФИО: " +
+                        workerList.getLastname() + " " + workerList.getName() + " " + workerList.getPatronymic()
+                        + ", Зарплата: " + workerList.getSalary() + ".Руб");
+            }
+        }
+        workerListOperation.clear();
+    }
+
+    private static void topTenWorkersByLongestWork(){
+        workerListOperation.clear();
+        readFormFileToWorkerListOperation();
+        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+            WorkerList workerList = (WorkerList) entry.getValue();
+            Date topDate = workerList.getDayOfAdmission();
+            Date checkerDate = workerList.getDayOfAdmission();
+            Date endDate = null;
+            for(int numTop = 1; numTop < 11; numTop++){
+                for (int top = 0; top < workerListOperation.size(); top++){
+                    if(topDate.getTime() > checkerDate.getTime()){
+                        endDate = topDate;
+                        topDate = checkerDate;
+                        checkerDate = workerList.getDayOfAdmission();
+                    }
+                    System.out.println(numTop + ", " + "Индекс: " + workerList.getIndex()+ " ФИО: " +
+                            workerList.getLastname() + " " + workerList.getName() + " " + workerList.getPatronymic()
+                            + ", Зарплата: " + endDate + ".Руб");
+                }
+            }
+        }
+        workerListOperation.clear();
     }
 }
