@@ -9,7 +9,7 @@ public class Core {
     private static final File FileWorkersPath = new File("core/Workers");
     private static final File FileWorkers = new File("core/Workers/Workers.txt");
 
-    private static HashMap<Integer, Object> workerListOperation = new HashMap<>();
+    private static HashMap<Integer, WorkerList> workerListOperation = new HashMap<>();
 
     public static void main(String[] args) {
 
@@ -46,22 +46,23 @@ public class Core {
             printStartOperationDialog();
         }
         scanner.close();
+
     }
 
     private static void checkFileIsExist() {
         if (Core.FileWorkers.isFile()) {
             System.out.println("База данных на текущий момент существует");
         } else
-        try {
-            boolean FilePath = Core.FileWorkersPath.mkdirs();
-            boolean File = Core.FileWorkers.createNewFile();
-            writeMapForOperationToFileWorkerList();
-            if (FilePath & File) {
-                System.out.println("Создана новая база данных");
+            try {
+                boolean FilePath = Core.FileWorkersPath.mkdirs();
+                boolean File = Core.FileWorkers.createNewFile();
+                writeMapForOperationToFileWorkerList();
+                if (FilePath & File) {
+                    System.out.println("Создана новая база данных");
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
             }
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
     }
 
     private static void removeWorker() {
@@ -70,35 +71,37 @@ public class Core {
         Scanner removeWorkerScan = new Scanner(System.in);
         System.out.println("Ведите индекс искомого работника: ");
         String inputIndex = removeWorkerScan.nextLine();
-        if (isExistWorker(inputIndex)){
-            showExistWorker(inputIndex);
-            System.out.println("Удалить пользователя?");
-            outer:
-            while (true){
-                Scanner answerScan = new Scanner(System.in);
-                printCorrectAnswerStatusOperationDialog();
-                String answer = answerScan.nextLine();
-                CorrectAnswer enumByUser = CorrectAnswer.getEnumByNumber(answer);
-                if (enumByUser == null) {
-                    System.out.println("Операция не найдена!");
-                    continue;
+        if (!isExistWorker(inputIndex)) {
+            System.out.println("Пользователь не найден");
+            return;
+        }
+        showExistWorker(inputIndex);
+        System.out.println("Удалить пользователя?");
+        outer:
+        while (true) {
+            Scanner answerScan = new Scanner(System.in);
+            printCorrectAnswerStatusOperationDialog();
+            String answer = answerScan.nextLine();
+            CorrectAnswer enumByUser = CorrectAnswer.getEnumByNumber(answer);
+            if (enumByUser==null) {
+                System.out.println("Операция не найдена!");
+                continue;
+            }
+            switch (enumByUser) {
+                case YES -> {
+                    workerListOperation.remove(inputIndex);
+                    writeMapForOperationToFileWorkerList();
+                    System.out.println("Пользователь был удалён");
+                    break outer;
                 }
-                switch (enumByUser){
-                    case YES -> {
-                        workerListOperation.remove(inputIndex);
-                        writeMapForOperationToFileWorkerList();
-                        System.out.println("Пользователь был удалён");
-                        break outer;
-                    }
-                    case NO -> {
-                        System.out.println("Операция переврана");
-                        break outer;
-                    }
+                case NO -> {
+                    System.out.println("Операция переврана");
+                    break outer;
                 }
             }
         }
-        else
-            System.out.println("Пользователь не найден");
+
+
     }
 
 
@@ -126,27 +129,27 @@ public class Core {
         int salaryWorker = scanner.nextInt();
         String statusWorker = WorkerStatus();
 
-        String sb = showTab(index,nameWorker, lastnameWorker, patronymicWorker, brithDayWorker, sexWorker,
+        String sb = showTab(index, nameWorker, lastnameWorker, patronymicWorker, brithDayWorker, sexWorker,
                 workerContactNumberArray, postWorker, departmentWorker, dayOfAdmissionWorker,
                 salaryWorker, statusWorker, chief);
 
         System.out.print(sb);
         System.out.println("Ведённые данные корректны?");
         outer:
-        while (true){
+        while (true) {
             Scanner answerScan = new Scanner(System.in);
             printCorrectAnswerStatusOperationDialog();
             String answer = answerScan.nextLine();
             CorrectAnswer enumByUser = CorrectAnswer.getEnumByNumber(answer);
-            if (enumByUser == null) {
+            if (enumByUser==null) {
                 System.out.println("Операция не найдена!");
                 continue;
             }
-            switch (enumByUser){
+            switch (enumByUser) {
                 case YES -> {
-                    WorkerList newWorker = new WorkerList(nameWorker, patronymicWorker,lastnameWorker,brithDayWorker,
-                            sexWorker, workerContactNumberArray ,postWorker,departmentWorker,chief, dayOfAdmissionWorker,
-                            salaryWorker,statusWorker,index);
+                    WorkerList newWorker = new WorkerList(nameWorker, patronymicWorker, lastnameWorker, brithDayWorker,
+                            sexWorker, workerContactNumberArray, postWorker, departmentWorker, chief, dayOfAdmissionWorker,
+                            salaryWorker, statusWorker, index);
                     workerListOperation.putIfAbsent(newWorker.getIndex(), newWorker);
                     writeMapForOperationToFileWorkerList();
                     break outer;
@@ -159,7 +162,7 @@ public class Core {
         }
     }
 
-    private static String showTab(Integer index , String nameNewWorker, String lastnameNewWorker,
+    private static String showTab(Integer index, String nameNewWorker, String lastnameNewWorker,
                                   String patronymicNewWorker, Date brithDayNewWorker, String sexNewWorker,
                                   ArrayList<String> newWorkerContactNumberArray, String postNewWorker,
                                   String departmentNewWorker, Date dayOfAdmissionNewWorker, int salaryNewWorker,
@@ -238,18 +241,16 @@ public class Core {
         String[] newWorkerContactNumberArraySplit = contactNumberNewWorker.split(" ");
         ArrayList<String> newWorkerContactNumberArray = new ArrayList<>();
         Pattern pattern = Pattern.compile("^(\\+7)\\d{10}");
-        for (String current : newWorkerContactNumberArraySplit){
-            if (pattern.matcher(current).matches() || workerListOperation.isEmpty()){
+        for (String current : newWorkerContactNumberArraySplit) {
+            if (pattern.matcher(current).matches() || workerListOperation.isEmpty()) {
                 System.out.println("Ведённый телефон соответствует формату");
-            }
-            else {
+            } else {
                 System.out.println("Невозможно добавить телефон. \n Телефон не соответствует формату.");
             }
 
-            if (isExistContact(current) && !workerListOperation.isEmpty()){
+            if (isExistContact(current) && !workerListOperation.isEmpty()) {
                 System.out.println("Такой номер существует");
-            }
-            else {
+            } else {
                 newWorkerContactNumberArray.add(current);
                 System.out.println("Телефон был добавлен");
             }
@@ -278,10 +279,9 @@ public class Core {
         readFormFileToWorkerListOperation();
         System.out.println("Ведите индекс искомого пользователя: ");
         String inputIndex = showScan.nextLine();
-        if (isExistWorker(inputIndex)){
+        if (isExistWorker(inputIndex)) {
             showExistWorker(inputIndex);
-        }
-        else
+        } else
             System.out.println("Пользователь не найден");
     }
 
@@ -344,7 +344,7 @@ public class Core {
     private static void readFormFileToWorkerListOperation() {
         try (FileInputStream fileToRead = new FileInputStream(FileWorkers);
              ObjectInputStream objectToRead = new ObjectInputStream(fileToRead)) {
-            workerListOperation = (HashMap<Integer, Object>) objectToRead.readObject();
+            workerListOperation = (HashMap<Integer, WorkerList>) objectToRead.readObject();
             if (workerListOperation.isEmpty()) {
                 System.out.println("Список работников пуст");
             }
@@ -353,13 +353,13 @@ public class Core {
         }
     }
 
-    private static boolean isExistContact(String phoneNumber){
+    private static boolean isExistContact(String phoneNumber) {
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
         boolean checkValue = true;
-        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+        for (Map.Entry<Integer, WorkerList> entry : workerListOperation.entrySet()) {
             WorkerList workerList = (WorkerList) entry.getValue();
-            if (workerList.getContactNumber().contains(phoneNumber)){
+            if (workerList.getContactNumber().contains(phoneNumber)) {
                 checkValue = true;
                 break;
             }
@@ -369,14 +369,14 @@ public class Core {
         return checkValue;
     }
 
-    private static boolean isExistWorker(String inputIndex){
+    private static boolean isExistWorker(String inputIndex) {
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
         Integer index = Integer.parseInt(inputIndex);
         boolean checkValue = true;
-        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+        for (Map.Entry<Integer, WorkerList> entry : workerListOperation.entrySet()) {
             WorkerList workerList = (WorkerList) entry.getValue();
-            if (workerList.getIndex().equals(index)){
+            if (workerList.getIndex().equals(index)) {
                 checkValue = true;
                 break;
             }
@@ -386,31 +386,30 @@ public class Core {
         return checkValue;
     }
 
-    private static Integer newIndex(){
+    private static Integer newIndex() {
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
         int index = 1;
-        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+        for (Map.Entry<Integer, WorkerList> entry : workerListOperation.entrySet()) {
             WorkerList workerList = (WorkerList) entry.getValue();
-            if (workerList.getIndex().equals(index)){
+            if (workerList.getIndex().equals(index)) {
                 index++;
-            }
-            else
+            } else
                 return index;
-                break;
+            break;
         }
         workerListOperation.clear();
         return index;
     }
 
-    private static void showExistWorker(String inputIndex){
+    private static void showExistWorker(String inputIndex) {
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
         String sb = "";
         Integer findIndex = Integer.parseInt(inputIndex);
-        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+        for (Map.Entry<Integer, WorkerList> entry : workerListOperation.entrySet()) {
             WorkerList workerList = (WorkerList) entry.getValue();
-            if (workerList.getIndex().equals(findIndex)){
+            if (workerList.getIndex().equals(findIndex)) {
                 Integer index = Integer.parseInt(inputIndex);
                 String name = workerList.getName();
                 String lastName = workerList.getLastname();
@@ -432,28 +431,28 @@ public class Core {
         workerListOperation.clear();
     }
 
-    private static void replaceChangeWorker(){
+    private static void replaceChangeWorker() {
         addNewWorker();
         readFormFileToWorkerListOperation();
     }
 
-    private static void topTenWorkersBySalary(){
+    private static void topTenWorkersBySalary() {
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
-        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+        for (Map.Entry<Integer, WorkerList> entry : workerListOperation.entrySet()) {
             WorkerList workerList = (WorkerList) entry.getValue();
             int topSalary = workerList.getSalary();
             int checkerSalary = workerList.getSalary();
             int stopSalary = 0;
-            for(int numTop = 1; numTop < 11; numTop++){
-                for (int top = 0; top < workerListOperation.size(); top++){
+            for (int numTop = 1; numTop < 11; numTop++) {
+                for (int top = 0; top < workerListOperation.size(); top++) {
                     if (stopSalary > checkerSalary) {
                         stopSalary = topSalary;
                         topSalary = checkerSalary;
                         checkerSalary = workerList.getSalary();
                     }
                 }
-                System.out.println(numTop + ", " + "Индекс: " + workerList.getIndex()+ " ФИО: " +
+                System.out.println(numTop + ", " + "Индекс: " + workerList.getIndex() + " ФИО: " +
                         workerList.getLastname() + " " + workerList.getName() + " " + workerList.getPatronymic()
                         + ", Зарплата: " + workerList.getSalary() + ".Руб");
             }
@@ -461,22 +460,22 @@ public class Core {
         workerListOperation.clear();
     }
 
-    private static void topTenWorkersByLongestWork(){
+    private static void topTenWorkersByLongestWork() {
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
-        for (Map.Entry<Integer, Object> entry : workerListOperation.entrySet()){
+        for (Map.Entry<Integer, WorkerList> entry : workerListOperation.entrySet()) {
             WorkerList workerList = (WorkerList) entry.getValue();
             Date topDate = workerList.getDayOfAdmission();
             Date checkerDate = workerList.getDayOfAdmission();
             Date endDate = workerList.getDayOfAdmission();
-            for(int numTop = 1; numTop < 11; numTop++){
-                for (int top = 0; top < workerListOperation.size(); top++){
-                    if(endDate.getTime() > checkerDate.getTime()){
+            for (int numTop = 1; numTop < 11; numTop++) {
+                for (int top = 0; top < workerListOperation.size(); top++) {
+                    if (endDate.getTime() > checkerDate.getTime()) {
                         endDate = topDate;
                         topDate = checkerDate;
                         checkerDate = workerList.getDayOfAdmission();
                     }
-                    System.out.println(numTop + ", " + "Индекс: " + workerList.getIndex()+ " ФИО: " +
+                    System.out.println(numTop + ", " + "Индекс: " + workerList.getIndex() + " ФИО: " +
                             workerList.getLastname() + " " + workerList.getName() + " " + workerList.getPatronymic()
                             + ", Зарплата: " + workerList.getDayOfAdmission() + ".Руб");
                 }

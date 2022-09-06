@@ -150,12 +150,7 @@ public class WorkerList implements Serializable {
         if (this==o) return true;
         if (o==null || getClass()!=o.getClass()) return false;
         WorkerList that = (WorkerList) o;
-        return Objects.equals(name, that.name) && Objects.equals(patronymic, that.patronymic) &&
-                Objects.equals(lastname, that.lastname) && Objects.equals(birthday, that.birthday) &&
-                Objects.equals(sex, that.sex) && Objects.equals(contactNumber, that.contactNumber) &&
-                Objects.equals(post, that.post) && Objects.equals(department, that.department) &&
-                Objects.equals(chief, that.chief) && Objects.equals(dayOfAdmission, that.dayOfAdmission) &&
-                Objects.equals(salary, that.salary) && Objects.equals(status, that.status);
+        return salary==that.salary && Objects.equals(index, that.index) && Objects.equals(name, that.name) && Objects.equals(patronymic, that.patronymic) && Objects.equals(lastname, that.lastname) && Objects.equals(birthday, that.birthday) && Objects.equals(sex, that.sex) && Objects.equals(contactNumber, that.contactNumber) && Objects.equals(post, that.post) && Objects.equals(department, that.department) && Objects.equals(chief, that.chief) && Objects.equals(dayOfAdmission, that.dayOfAdmission) && Objects.equals(status, that.status);
     }
 
     @Override
