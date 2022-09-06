@@ -64,42 +64,6 @@ public class Core {
         }
     }
 
-    private static void changeWorker() {
-        workerListOperation.clear();
-        readFormFileToWorkerListOperation();
-        Scanner changeWorkerScan = new Scanner(System.in);
-        System.out.println("Ведите индекс искомого работника: ");
-        String inputIndex = changeWorkerScan.nextLine();
-        if (isExistWorker(inputIndex)){
-            showExistWorker(inputIndex);
-            Integer index = Integer.parseInt(inputIndex);
-            System.out.println("Изменить пользователя?");
-            outer:
-            while (true){
-                Scanner answerScan = new Scanner(System.in);
-                printCorrectAnswerStatusOperationDialog();
-                String answer = answerScan.nextLine();
-                CorrectAnswer enumByUser = CorrectAnswer.getEnumByNumber(answer);
-                if (enumByUser == null) {
-                    System.out.println("Операция не найдена!");
-                    continue;
-                }
-                switch (enumByUser){
-                    case YES -> {
-                        replaceChangeWorker();
-                        break outer;
-                    }
-                    case NO -> {
-                        System.out.println("Операция переврана");
-                        break outer;
-                    }
-                }
-            }
-        }
-        else
-            System.out.println("Пользователь не найден");
-    }
-
     private static void removeWorker() {
         workerListOperation.clear();
         readFormFileToWorkerListOperation();
@@ -305,9 +269,7 @@ public class Core {
         brithDayNewWorker.set(brithDayYear,
                 brithDayMount,
                 brithDay);
-        Date date1 = brithDayNewWorker.getTime();
-        return date1;
-
+        return brithDayNewWorker.getTime();
     }
 
     private static void showWorker() {
@@ -326,11 +288,6 @@ public class Core {
     private static void printStartOperationDialog() {
         System.out.println("Ведите число функции: ");
         System.out.println(getOperations());
-    }
-
-    private static void printChangeOperationDialog() {
-        System.out.println("Ведите число функции: ");
-        System.out.println(getOperationsChangeWorker());
     }
 
     private static void printWorkerStatusOperationDialog() {
@@ -490,7 +447,7 @@ public class Core {
             int stopSalary = 0;
             for(int numTop = 1; numTop < 11; numTop++){
                 for (int top = 0; top < workerListOperation.size(); top++){
-                    if (topSalary > checkerSalary) {
+                    if (stopSalary > checkerSalary) {
                         stopSalary = topSalary;
                         topSalary = checkerSalary;
                         checkerSalary = workerList.getSalary();
@@ -511,17 +468,17 @@ public class Core {
             WorkerList workerList = (WorkerList) entry.getValue();
             Date topDate = workerList.getDayOfAdmission();
             Date checkerDate = workerList.getDayOfAdmission();
-            Date endDate = null;
+            Date endDate = workerList.getDayOfAdmission();
             for(int numTop = 1; numTop < 11; numTop++){
                 for (int top = 0; top < workerListOperation.size(); top++){
-                    if(topDate.getTime() > checkerDate.getTime()){
+                    if(endDate.getTime() > checkerDate.getTime()){
                         endDate = topDate;
                         topDate = checkerDate;
                         checkerDate = workerList.getDayOfAdmission();
                     }
                     System.out.println(numTop + ", " + "Индекс: " + workerList.getIndex()+ " ФИО: " +
                             workerList.getLastname() + " " + workerList.getName() + " " + workerList.getPatronymic()
-                            + ", Зарплата: " + endDate + ".Руб");
+                            + ", Зарплата: " + workerList.getDayOfAdmission() + ".Руб");
                 }
             }
         }
